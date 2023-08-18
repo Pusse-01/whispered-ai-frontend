@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -28,11 +29,13 @@ function FilesTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = useState(false);
+    const { folder_id } = useParams();
 
     useEffect(() => {
+        console.log(folder_id)
         setIsLoading(true);
         // Fetch data from the endpoint
-        fetch(`${API_BASE_URL}/files/${user._id}`, {
+        fetch(`${API_BASE_URL}/files/${folder_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,8 +43,12 @@ function FilesTable() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setRows(data);
-                console.log(data)
+
+                setRows(data.files);
+                if (Array.isArray(data.files)) {
+                    console.log(data.files)
+                }
+
                 setIsLoading(false);
             })
             .catch((error) => {

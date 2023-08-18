@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 const SignupForm = ({ handleLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('')
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleNameChange = (event) => {
         setName(event.target.value);
+    };
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
     };
 
     const handleUsernameChange = (event) => {
@@ -20,18 +26,38 @@ const SignupForm = ({ handleLogin }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        const enteredUsername = event.target.elements.username.value;
-        const enteredPassword = event.target.elements.password.value;
+        // Perform login logic by sending data to the backend
+        fetch(`${API_BASE_URL}/signup/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                username: email,
+                password: password,
 
-        // Perform login logic with username and password
-        if (enteredUsername === 'admin' && enteredPassword === 'admin123') {
-            // Simulating a successful login
-            handleLogin(); // Call the onLogin function passed as a prop
-        } else {
-            // Handle login error (e.g., display error message)
-            console.log('Invalid username or password');
-        }
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Invalid credentials');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data)
+                localStorage.setItem('user', JSON.stringify(data.user));
+                // Login successful, handle the response data (e.g., save the token, update state, etc.)
+                handleLogin();
+            })
+            .catch((error) => {
+                console.error(error.message);
+                // Handle login error (e.g., display error message)
+            });
     };
+
 
     return (
         <div>
@@ -40,7 +66,7 @@ const SignupForm = ({ handleLogin }) => {
                     <label className="label">
                         <span className="form-label label-text">Name</span>
                     </label>
-                    <input
+                    {/* <input
                         type="text"
                         id="name"
                         value={name}
@@ -50,12 +76,24 @@ const SignupForm = ({ handleLogin }) => {
                     />
                     <label className="label">
                         <span className="form-label label-text">Username</span>
+                    </label> */}
+
+                    <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={handleNameChange}
+                        className="my-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-md border-gray-300 rounded-md px-2"
+                        required
+                    />
+                    <label className="label">
+                        <span className="form-label label-text">Email</span>
                     </label>
                     <input
                         type="text"
-                        id="username"
-                        value={username}
-                        onChange={handleUsernameChange}
+                        id="email"
+                        value={email}
+                        onChange={handleEmailChange}
                         className="my-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-md border-gray-300 rounded-md px-2"
                         required
                     />

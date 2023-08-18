@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    useNavigate
+    useNavigate, useParams
 } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterIcon from '@mui/icons-material/Filter';
 import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import FileUploader from './file_uploader';
+import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
+
 
 function FilesHeader() {
+    const folder_id = useParams();
     const navigate = useNavigate();
+    const [fileUploadDialog, setFileUploadDialogOpen] = useState(false)
 
     const handleAddFile = () => {
         // Navigate to the file uploading component
-        navigate('/upload-file');
+        setFileUploadDialogOpen(true)
     };
 
     return (
         <div>
+            <Dialog open={fileUploadDialog} onClose={() => setFileUploadDialogOpen(false)}>
+                <DialogTitle>Add new file</DialogTitle>
+                <DialogContent>
+                    <FileUploader folder_id={folder_id} />
+                </DialogContent>
+                {/* <DialogActions>
+                    <Button onClick={() => setFormOpen(false)}>Cancel</Button>
+                    <Button onClick={handleSave}>Save</Button>
+                </DialogActions> */}
+            </Dialog>
             {/* Container */}
             <div
                 className="flex justify-between items-center mb-4"

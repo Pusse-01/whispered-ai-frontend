@@ -208,13 +208,13 @@ export default function MiniDrawer({ onLogout }) {
 
                         {/* <ListItem key="Files" disablePadding sx={{ display: 'block' }}> */}
                         <CustomListItem
-                            onClick={() => navigate("/files")}
-                            selected={currentPath === "/files" || currentPath === "/upload-file"} // Check if the item is selected based on the current URL
+                            onClick={() => navigate("/folders")}
+                            selected={currentPath === "/folders" || currentPath === "/upload-file"} // Check if the item is selected based on the current URL
                         >
-                            <CustomListItemIcon selected={currentPath === "/files"}>
+                            <CustomListItemIcon selected={currentPath === "/folders"}>
                                 <LibraryBooksIcon />
                             </CustomListItemIcon>
-                            <ListItemText primary="Files" sx={{ opacity: open ? 1 : 0 }} />
+                            <ListItemText primary="Folders" sx={{ opacity: open ? 1 : 0 }} />
                         </CustomListItem>
                         {/* </ListItem> */}
                         <CustomListItem

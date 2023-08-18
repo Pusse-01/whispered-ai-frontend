@@ -34,6 +34,7 @@ const LoginForm = ({ handleLogin }) => {
                 return response.json();
             })
             .then((data) => {
+                console.log(data)
                 localStorage.setItem('user', JSON.stringify(data.user));
                 // Login successful, handle the response data (e.g., save the token, update state, etc.)
                 handleLogin();

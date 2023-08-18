@@ -10,10 +10,12 @@ import CreateBotForm from './components/create_new_bot';
 import ChatsPage from './screens/chats';
 import LoginScreen from './screens/login';
 import SignupScreen from './screens/signup';
+import Folders from './screens/folders';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false); // Add state for the drawer
+  const [selectedItem, setSelectedItem] = useState('allConversations');
 
   useEffect(() => {
     // Check if the user is logged in by reading from local storage
@@ -59,12 +61,13 @@ function App() {
             <div>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/files" element={<FileLibrary />} />
-                <Route path="/upload-file" element={<FileUploader />} />
+                <Route path="/files/:folder_id" element={<FileLibrary />} />
+                <Route path="/folders" element={<Folders />} />
+                {/* <Route path="/upload-file" element={<FileUploader />} /> */}
                 <Route path="/chatbot" element={<Bots />} />
                 <Route path="/create-bot" element={<CreateBotForm />} />
-                <Route path="/chats/" element={<ChatsPage />} />
-                <Route path="/chats/:chatID" element={<ChatsPage />} />
+                <Route path="/chats" element={<ChatsPage selectedItem={selectedItem} setSelectedItem={setSelectedItem} />} />
+                <Route path="/chats/:chatID" element={<ChatsPage selectedItem={'newConversations'} setSelectedItem={setSelectedItem} />} />
 
               </Routes>
             </div>

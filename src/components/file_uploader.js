@@ -23,7 +23,7 @@ const choices = [
     { title: 'Other' },
 ];
 
-function FileUploader() {
+function FileUploader({ folder_id }) {
     const user = getUserDataFromLocalStorage();
     const [file, setFile] = useState(null);
     const [selectedTags, setSelectedTags] = useState([]);
@@ -69,7 +69,6 @@ function FileUploader() {
         }
 
         setIsUploading(true);
-
         // Convert the file to Base64 string
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -80,9 +79,9 @@ function FileUploader() {
                 folderPath: '',
                 filename: file.name,
                 tags: selectedTags.map((tag) => tag.title),
-                userID: user._id
+                userID: user._id,
+                folder_id: (folder_id.folder_id)
             };
-
             // Make the POST request to /upload endpoint
             fetch(`${API_BASE_URL}/upload`, {
                 method: 'POST',
@@ -110,6 +109,7 @@ function FileUploader() {
                 })
                 .finally(() => {
                     setIsUploading(false);
+                    window.location.reload()
                 });
         };
     };
@@ -131,14 +131,14 @@ function FileUploader() {
     };
 
     return (
-        <div className="px-4 md:px-8 py-4 ml-20">
-            <div className="flex justify-between mb-4">
+        <div className="px-4 md:px-8 py-4">
+            {/* <div className="flex justify-between mb-4">
                 <h2 className="text-2xl font-bold">File Uploader</h2>
                 <button onClick={handleBack} className="text-gray hover:underline">
                     <ArrowBackIosOutlinedIcon className="py-2" />
                     Back to Library
                 </button>
-            </div>
+            </div> */}
 
             {/* Dialog for adding a new category */}
             <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>

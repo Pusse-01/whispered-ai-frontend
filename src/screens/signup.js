@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../assets/logo.png';
 import SignupForm from '../components/signup_form';
-const Signup = ({ handleSignup }) => {
+const Signup = ({ handleLogin }) => {
     return (
         <div className="h-screen grid grid-cols-2">
             <div className="bg-gray-500 flex items-center justify-start">
@@ -23,7 +23,7 @@ const Signup = ({ handleSignup }) => {
                     Welcome to Whispered AI, Please Signup to continue...
                 </p>
                 <div>
-                    <SignupForm handleSignup={handleSignup} />
+                    <SignupForm handleLogin={handleLogin} />
                 </div>
             </div>
         </div>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 import { getUserDataFromLocalStorage } from '../utils'
 
 import API_BASE_URL from '../config';
@@ -20,31 +21,41 @@ const CreateBotForm = () => {
     const [botData, setBotData] = useState({
         name: '',
         description: '',
-        specialty: [],
+        specialty: null,
         folders: [],
         logo_image: '',
     });
     const [files, setFiles] = useState([]);
+    const [isPromptDialogOpen, setIsPromptDialogOpen] = useState(false);
+    const [promptText, setPromptText] = useState('');
+    const [systemPrompt, setSystemPrompt] = useState('');
+    const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
 
+    const handlePromptSave = () => {
+        // Handle saving prompt text
+        setIsPromptDialogOpen(false);
+    };
     // Dummy data for the tags
     const choices = [
-        { title: 'Marketing' },
+        { title: 'Factual' },
+        { title: 'Creative' },
+        // { title: 'Training' },
         { title: 'HR' },
-        { title: 'IT' },
-        { title: 'Designing' },
-        { title: 'Finance' },
-        { title: 'All' },
+        { title: 'IT Support' },
+        // { title: 'Custom Support' },
+        { title: 'Marketing' },
         // Add more tags if needed
     ];
 
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/files/${user._id}`);
+                const response = await fetch(`${API_BASE_URL}/folders/${user._id}`);
                 if (response.ok) {
                     const filesData = await response.json();
-                    setFiles(filesData);
+                    const allFilesChoice = { name: 'Select All' };
+                    setFiles([allFilesChoice, ...filesData.folders]);
                 } else {
                     throw new Error('Failed to fetch files.');
                 }
@@ -66,18 +77,34 @@ const CreateBotForm = () => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        if (botData.specialty === null && (promptText.trim() === '' || systemPrompt.trim() === '')) {
+            setIsErrorDialogOpen(true);
+            return;
+        }
+        const foldersToSend = botData.folders.map((folderItem) => folderItem.name);
+
+        // if (foldersToSend.includes('Select All')) {
+        //     foldersToSend = ['all'];
+        // }
+
+        console.log(foldersToSend)
+
+        const specialtyTitles = botData.specialty ? [botData.specialty].map(item => item.title) : [];
+        console.log(botData.specialty)
         setLoading(true);
         const botCreateData = {
             name: botData.name,
             description: botData.description,
-            specialty: botData.specialty.map((specialtyItem) => specialtyItem.title),
-            folders: botData.folders.map((folderItem) => folderItem.file_name),
+            specialty: specialtyTitles,
+            promptText: promptText,
+            systemPrompt: systemPrompt,
+            folders: foldersToSend,
             logo_image: botData.logo_image,
             user_id: user._id,
             saved_time: new Date().toISOString(),
             chats: [],
         };
-
+        console.log(botCreateData)
 
         // Assuming you have an API function to create a new bot, replace API_BASE_URL with your actual API base URL
         try {
@@ -104,6 +131,7 @@ const CreateBotForm = () => {
         } catch (error) {
             console.error('Error creating bot:', error);
             setSnackBarMessage('Bot creation failed!');
+            setLoading(false);
         }
 
         setLoading(false);
@@ -169,19 +197,18 @@ const CreateBotForm = () => {
                         required
                     />
                 </div>
-
-                <div className="flex items-center justify-between mb-4  w-full">
+                <div className="flex items-center justify-between mb-4 w-full">
                     <label className="text-sm font-medium text-gray-700 mr-4">
-                        Specialty:
+                        Personality:
                     </label>
                     <Autocomplete
-                        multiple
+
                         id="bot-tags"
                         size="small"
                         options={choices}
                         sx={{ width: '65vw' }}
                         getOptionLabel={(option) => option.title}
-                        value={botData.specialty}
+                        value={botData.specialty || []}
                         onChange={(event, newValue) => {
                             setBotData({ ...botData, specialty: newValue });
                         }}
@@ -194,11 +221,19 @@ const CreateBotForm = () => {
                             />
                         )}
                     />
+                    <button
+                        className="text-blue-600"
+                        onClick={() => setIsPromptDialogOpen(true)}
+                    >
+                        Advanced Prompt
+                    </button>
                 </div>
+
+
                 {files.length > 0 && (
                     <div className="flex items-center justify-between mb-4 w-full">
                         <label className="text-sm font-medium text-gray-700 mr-4">
-                            Files:
+                            Folders:
                         </label>
                         <Autocomplete
                             multiple
@@ -206,7 +241,7 @@ const CreateBotForm = () => {
                             size="small"
                             options={files}
                             sx={{ width: '65vw' }}
-                            getOptionLabel={(option) => option.file_name}
+                            getOptionLabel={(option) => option.name}
                             value={botData.folders}
                             onChange={(event, newValue) => {
                                 setBotData({ ...botData, folders: newValue });
@@ -243,6 +278,45 @@ const CreateBotForm = () => {
                         Create Bot
                     </button>
                 </div>
+                {/* Advanced Prompt Dialog */}
+                <Dialog
+                    fullWidth='true'
+                    maxWidth='md'
+                    open={isPromptDialogOpen} onClose={() => setIsPromptDialogOpen(false)}>
+                    <DialogTitle>Advanced Prompt</DialogTitle>
+                    <DialogContent>
+                        <p className='text-gray-500'>This is your main control panel. Here you provide detailed instructions that directly guide the behavior and output of your AI bot. </p>
+                        <TextField
+                            label="Prompt"
+                            variant="outlined"
+                            fullWidth
+                            value={promptText}
+                            onChange={(e) => setPromptText(e.target.value)}
+                        />
+                        <div className='mt-4'></div>
+                        <p className='text-gray-500'>This is where you set the general 'mood' or 'character' for your AI bot. It's like giving it a personality, but its influence on the bot's responses is gentler.</p>
+                        <TextField
+                            label="System Prompt"
+                            variant="outlined"
+                            fullWidth
+                            value={systemPrompt}
+                            onChange={(e) => setSystemPrompt(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsPromptDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handlePromptSave} color="primary">Save</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
+                    <DialogTitle>Error</DialogTitle>
+                    <DialogContent>
+                        <Typography variant="body1">Please select a Personality or enter Prompt texts before creating the bot!</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setIsErrorDialogOpen(false)}>OK</Button>
+                    </DialogActions>
+                </Dialog>
 
             </form>
             {/* Loading spinner */}
