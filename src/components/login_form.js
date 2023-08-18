@@ -50,7 +50,7 @@ const LoginForm = ({ handleLogin }) => {
             <form onSubmit={handleFormSubmit} className="mb-8" action="#">
                 <div className="form-control w-full ">
                     <label className="label">
-                        <span className="form-label label-text">Username</span>
+                        <span className="form-label label-text">Email</span>
                     </label>
                     <input
                         type="text"
