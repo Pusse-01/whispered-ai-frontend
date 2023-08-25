@@ -77,6 +77,7 @@ function FilesTable() {
             .then((response) => {
                 if (response.ok) {
                     setDeleteSuccess(true);
+                    window.location.reload()
                 } else {
                     setDeleteSuccess(false);
                 }
@@ -88,6 +89,7 @@ function FilesTable() {
             .finally(() => {
                 setIsLoadingDelete(false);
                 setDialogOpen(false);
+                window.location.reload()
             });
     };
 

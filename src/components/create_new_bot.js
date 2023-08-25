@@ -311,7 +311,7 @@ const CreateBotForm = () => {
                 <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
                     <DialogTitle>Error</DialogTitle>
                     <DialogContent>
-                        <Typography variant="body1">Please select a Personality or enter Prompt texts before creating the bot!</Typography>
+                        <Typography variant="body1">Please add Prompt texts here. Make sure to give the clear instructions on the specialty of the bot!</Typography>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setIsErrorDialogOpen(false)}>OK</Button>
