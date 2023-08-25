@@ -58,15 +58,16 @@ function FileUploader({ folder_id }) {
     };
 
     const handleUploadFile = () => {
+        console.log(folder_id)
         if (!file) {
             alert('Please select a file to upload.');
             return;
         }
 
-        if (selectedTags.length === 0 && !newCategory) {
-            setIsDialogOpen(true);
-            return;
-        }
+        // if (selectedTags.length === 0 && !newCategory) {
+        //     setIsDialogOpen(true);
+        //     return;
+        // }
 
         setIsUploading(true);
         // Convert the file to Base64 string
@@ -78,7 +79,7 @@ function FileUploader({ folder_id }) {
                 base64String,
                 folderPath: '',
                 filename: file.name,
-                tags: selectedTags.map((tag) => tag.title),
+                // tags: selectedTags.map((tag) => tag.title),
                 userID: user._id,
                 folder_id: (folder_id.folder_id)
             };
@@ -141,22 +142,14 @@ function FileUploader({ folder_id }) {
             </div> */}
 
             {/* Dialog for adding a new category */}
-            <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+            {/* <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
                 <DialogTitle>Please add a folder category to continue!</DialogTitle>
-                {/* <DialogContent>
-                    <TextField
-                        fullWidth
-                        label="New Category"
-                        variant="outlined"
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                    />
-                </DialogContent> */}
+               
                 <DialogActions>
                     <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                    {/* <Button onClick={handleAddNewCategory}>Add Category</Button> */}
+                    
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
             {isUploading && (
                 <Dialog open={true}>
                     <DialogContent>
@@ -170,7 +163,7 @@ function FileUploader({ folder_id }) {
                 </Dialog>
             )}
 
-            <div className="mb-4 flex items-center justify-between mt-8">
+            {/* <div className="mb-4 flex items-center justify-between mt-8">
                 <label className="text-sm font-medium text-gray-700 w-1/8 mr-4">
                     Select Folder Category:
                 </label>
@@ -200,7 +193,7 @@ function FileUploader({ folder_id }) {
                         />
                     )}
                 />
-            </div>
+            </div> */}
 
             <div className="flex flex-col items-center justify-center mt-4 ">
                 <div className="relative bg-gray-100 rounded-md w-full p-4">
