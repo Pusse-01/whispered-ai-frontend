@@ -116,6 +116,13 @@ const NewConversations = () => {
         fetchPreviousMessages();
     }, [chatID]);
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevents the default behavior (e.g., form submission)
+            handleSendMessage(); // Call the function to send the message
+        }
+    };
+
     return (
         <div
             style={{ height: '70vh' }}
@@ -188,6 +195,7 @@ const NewConversations = () => {
                     placeholder="Type your message..."
                     value={message}
                     onChange={handleChangeMessage}
+                    onKeyPress={handleKeyPress}
                 />
                 <button
                     className="bg-blue-500 text-white p-2 rounded"
