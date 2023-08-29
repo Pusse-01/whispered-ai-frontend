@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import API_BASE_URL from '../config';
 import { getUserDataFromLocalStorage } from '../utils'
+import ReactMarkdown from 'react-markdown'
 
 const NewConversations = () => {
     const user = getUserDataFromLocalStorage();
@@ -78,7 +79,7 @@ const NewConversations = () => {
                 ...prevMessages.slice(0, -1), // Remove the last "typing..." message
                 { sender: 'bot', text: botReply },
             ]);
-
+            console.log(botReply)
             setMessage(''); // Clear the input field
         } catch (error) {
             console.error('Error sending message:', error);
@@ -177,10 +178,12 @@ const NewConversations = () => {
                                 className="w-6 h-6 mr-2"
                             />
                             <div
-                                className={`p-2 flex justify-start text-left rounded ${message.sender === 'user' ? 'bg-white' : 'bg-gray-200'
+                                className={`p-2 justify-start text-left rounded ${message.sender === 'user' ? 'bg-white' : 'bg-gray-200'
                                     }`}
                             >
-                                {message.text}
+                                <ReactMarkdown>{message.text}</ReactMarkdown>
+                                {/* <div dangerouslySetInnerHTML={{ __html: message.text }} /> */}
+
                             </div>
                         </div>
 

@@ -11,6 +11,7 @@ import ChatsPage from './screens/chats';
 import LoginScreen from './screens/login';
 import SignupScreen from './screens/signup';
 import Folders from './screens/folders';
+import Profile from './screens/profile';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -61,6 +62,7 @@ function App() {
             <div>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/files/:folder_id" element={<FileLibrary />} />
                 <Route path="/folders" element={<Folders />} />
                 {/* <Route path="/upload-file" element={<FileUploader />} /> */}

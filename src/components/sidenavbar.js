@@ -31,6 +31,7 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import avatar from '../assets/avatar.png'
 import logo from '../assets/logo.png'
+import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 
 const drawerWidth = 240;
 const selectedColor = '#1250B9'; // Replace this with your desired blue color
@@ -275,13 +276,13 @@ export default function MiniDrawer({ onLogout }) {
                         {/* <ListItem key="Files" disablePadding sx={{ display: 'block' }}> */}
 
                         <CustomListItem
-                            onClick={() => navigate("/support")}
-                            selected={currentPath === "/support"} // Check if the item is selected based on the current URL
+                            onClick={() => navigate("/profile")}
+                            selected={currentPath === "/profile"} // Check if the item is selected based on the current URL
                         >
-                            <CustomListItemIcon selected={currentPath === "/support"}>
-                                <LocalPhoneOutlinedIcon />
+                            <CustomListItemIcon selected={currentPath === "/profile"}>
+                                <Person2OutlinedIcon />
                             </CustomListItemIcon>
-                            <ListItemText primary="Support" sx={{ opacity: open ? 1 : 0 }} />
+                            <ListItemText primary="Profile" sx={{ opacity: open ? 1 : 0 }} />
                         </CustomListItem>
                         {/* </ListItem> */}
 
