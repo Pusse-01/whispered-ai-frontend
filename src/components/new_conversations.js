@@ -9,6 +9,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import API_BASE_URL from '../config';
 import { getUserDataFromLocalStorage } from '../utils'
 import ReactMarkdown from 'react-markdown'
+import './styling.css'
 
 const NewConversations = () => {
     const user = getUserDataFromLocalStorage();
@@ -181,7 +182,11 @@ const NewConversations = () => {
                                 className={`p-2 justify-start text-left rounded ${message.sender === 'user' ? 'bg-white' : 'bg-gray-200'
                                     }`}
                             >
-                                <ReactMarkdown>{message.text}</ReactMarkdown>
+                                {message.text === 'typing...' ? (
+                                    <div className="loading text-sm text-gray-500">...</div>
+                                ) : (
+                                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                                )}
                                 {/* <div dangerouslySetInnerHTML={{ __html: message.text }} /> */}
 
                             </div>
