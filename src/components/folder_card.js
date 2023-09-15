@@ -16,7 +16,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
 import MuiAlert from '@mui/material/Alert';
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 const FolderCard = ({ folder }) => {
     const [isDialogOpen, setDialogOpen] = useState(false);

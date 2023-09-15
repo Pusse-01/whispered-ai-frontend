@@ -3,7 +3,7 @@ import { getUserDataFromLocalStorage } from '../utils';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 
 

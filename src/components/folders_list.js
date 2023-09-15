@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import FolderCard from './folder_card';
 import { getUserDataFromLocalStorage } from '../utils'
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 function FolderList() {
     const [folders, setFolders] = useState([]);

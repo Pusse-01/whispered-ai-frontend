@@ -27,7 +27,7 @@ import CircularProgress from '@mui/material/CircularProgress'; // Import Circula
 import { getUserDataFromLocalStorage } from '../utils'
 import { useNavigate } from 'react-router-dom';
 
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 const BotsTable = () => {
     const user = getUserDataFromLocalStorage();
@@ -69,7 +69,6 @@ const BotsTable = () => {
     };
 
     const handleNewConversation = async (botId, specialty, documents) => {
-        console.log(botId, specialty, documents)
         try {
             setIsLoading(true);
             const currentDate = new Date().toISOString().split('T')[0];
@@ -101,6 +100,36 @@ const BotsTable = () => {
             // Handle error here, e.g., show an error message on the UI
         }
     };
+
+    const handleShareClick = async (botId, specialty, documents) => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_BASE_URL}/create_new_chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    bot_id: botId,
+                    messages: [],
+                    specialty: specialty,
+                    documents: documents,
+                    userID: user._id,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to create conversation');
+            }
+            const data = await response.json();
+            const chatID = data.id;
+            setIsLoading(false);
+            navigate(`/share/${chatID}`); // Navigate to the newly created conversation
+        } catch (error) {
+            console.error('Error creating conversation:', error);
+            setIsLoading(false);
+            // Handle error here, e.g., show an error message on the UI
+        }
+    }
 
     const handleEditClick = (bot) => {
         setSelectedBot(bot);
@@ -255,7 +284,17 @@ const BotsTable = () => {
                                                 <DeleteIcon sx={{ marginRight: 1 }} />
                                                 Delete
                                             </MenuItem>
-                                            <MenuItem onClick={handleClose}>
+                                            <MenuItem
+                                                onClick={() => {
+                                                    handleClose();
+                                                    handleShareClick(
+                                                        item.id, // Bot ID
+                                                        item.specialty, // Specialty
+                                                        item.folders // Documents
+                                                    );
+                                                }}
+
+                                            >
                                                 <ShareIcon sx={{ marginRight: 1 }} />
                                                 Share
                                             </MenuItem>

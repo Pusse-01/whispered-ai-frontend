@@ -6,38 +6,24 @@ import BotLogo from '../assets/Bot.png';
 import UserLogo from '../assets/user.png';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 import { getUserDataFromLocalStorage } from '../utils'
 import ReactMarkdown from 'react-markdown'
 import './styling.css'
 
 const NewConversations = () => {
-    const user = getUserDataFromLocalStorage();
+    // const user = getUserDataFromLocalStorage();
     // State to keep track of the user input message
     const [message, setMessage] = useState('');
     // Ref for scrolling to the bottom of chat messages
     const chatContainerRef = useRef(null);
-    const choices = [
-        { title: 'Marketing' },
-        { title: 'HR' },
-        { title: 'IT' },
-        { title: 'Designing' },
-        { title: 'Finance' },
-        { title: 'All' },
-        // Add more tags if needed
-    ];
+
     const [chatMessages, setChatMessages] = useState([]); // State to store chat messages
     const [isLoading, setIsLoading] = useState(false);
     const [chatData, setChatData] = useState({})
     const { chatID } = useParams();
-    // Dummy data for chat messages (user and bot)
-    // const chatMessages = [
-    //     { id: 1, sender: 'user', text: 'Hello' },
-    //     { id: 2, sender: 'bot', text: 'Hi, how can I help you?' },
+    const [errorMessage, setErrorMessage] = useState('');
 
-    //     // Add more chat messages if needed
-    // ];
-    console.log(chatID);
     const handleChangeMessage = (e) => {
         setMessage(e.target.value);
     };
@@ -61,7 +47,7 @@ const NewConversations = () => {
                 },
                 body: JSON.stringify({
                     query: msg,
-                    user_id: user._id,
+                    user_id: '',
                     conversation_id: chatID,
                     files: chatData.documents, // Add files if needed
                     tags: chatData.tags, // Add tags if needed
@@ -80,10 +66,14 @@ const NewConversations = () => {
                 ...prevMessages.slice(0, -1), // Remove the last "typing..." message
                 { sender: 'bot', text: botReply },
             ]);
-            console.log(botReply)
             setMessage(''); // Clear the input field
         } catch (error) {
             console.error('Error sending message:', error);
+            setErrorMessage('Something went wrong!');
+            setTimeout(() => {
+                setErrorMessage('');
+                window.location.reload(); // Step 3: Reload the page
+            }, 3000);
         } finally {
             setIsLoading(false);
         }
@@ -91,7 +81,6 @@ const NewConversations = () => {
 
     // Scroll to the bottom of the chat messages when a new message is added
     useEffect(() => {
-        console.log(chatID)
         chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         const fetchPreviousMessages = async () => {
             try {
@@ -107,7 +96,7 @@ const NewConversations = () => {
                 const messages = data.messages.map(msg => ({ sender: msg.user, text: msg.text }));
                 setChatMessages(messages);
                 setChatData(data)
-                console.log(messages)
+
             } catch (error) {
                 console.error('Error fetching conversation:', error);
             } finally {
@@ -135,30 +124,6 @@ const NewConversations = () => {
                 className="flex justify-between items-center mb-4 flex-wrap"
             >
                 <div className="text-lg">Hi there! How can I help you?</div>
-                {/* <div className="flex items-center justify-between w-2/5">
-                    <label className="text-sm font-medium text-gray-700">
-                        Include
-                    </label>
-                    <Autocomplete
-                        multiple
-                        id="bot-tags"
-                        size="small"
-                        options={choices}
-                        sx={{ width: '200px' }}
-                        getOptionLabel={(option) => option.title}
-                        defaultValue={[]}
-                        renderInput={(params) => (
-                            <TextField
-                                sx={{ overflow: 'hidden' }}
-                                {...params}
-                                variant="standard"
-                                fullWidth
-                                placeholder="Add tags to select folders"
-                            />
-                        )}
-                    />
-                </div> */}
-
             </div>
             {/* Chat interface */}
             <div
@@ -190,9 +155,13 @@ const NewConversations = () => {
                                 {/* <div dangerouslySetInnerHTML={{ __html: message.text }} /> */}
 
                             </div>
+
                         </div>
 
                     ))}
+                    {errorMessage && (
+                        <div className="text-red-500">{errorMessage}</div>
+                    )}
                 </div>
             </div>
             {/* Input field for user message */}

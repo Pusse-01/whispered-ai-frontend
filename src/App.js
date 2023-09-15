@@ -12,6 +12,8 @@ import LoginScreen from './screens/login';
 import SignupScreen from './screens/signup';
 import Folders from './screens/folders';
 import Profile from './screens/profile';
+import ChatSharingWidget from './components/chat-sharing-widget';
+import ChatbotCustomizer from './components/chatbot-customizing';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,8 +57,13 @@ function App() {
   return (
     <div className="App">
       <Router>
+        <Routes>
+          <Route path="/widget/:chatID" element={<ChatSharingWidget />} />
+        </Routes>
+
         {isLoggedIn ? (
           <>
+
             {/* Pass the drawer state and handleDrawerOpen/handleDrawerClose functions */}
             <MiniDrawer open={drawerOpen} onLogout={handleLogout} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
             <div>
@@ -70,7 +77,7 @@ function App() {
                 <Route path="/create-bot" element={<CreateBotForm />} />
                 <Route path="/chats" element={<ChatsPage selectedItem={selectedItem} setSelectedItem={setSelectedItem} />} />
                 <Route path="/chats/:chatID" element={<ChatsPage selectedItem={'newConversations'} setSelectedItem={setSelectedItem} />} />
-
+                <Route path="/share/:chatID" element={<ChatbotCustomizer />} />
               </Routes>
             </div>
           </>

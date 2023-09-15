@@ -8,7 +8,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import './styling.css'
 
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 const AllConversations = ({ onCardClick }) => {
     const user = getUserDataFromLocalStorage();
