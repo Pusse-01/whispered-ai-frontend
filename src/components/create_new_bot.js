@@ -9,7 +9,7 @@ import MuiAlert from '@mui/material/Alert';
 import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 import { getUserDataFromLocalStorage } from '../utils'
 
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 
 const CreateBotForm = () => {

@@ -8,7 +8,7 @@ import { getUserDataFromLocalStorage } from '../utils'
 import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 const Chats = ({ selectedItem, setSelectedItem }) => {
     const user = getUserDataFromLocalStorage();

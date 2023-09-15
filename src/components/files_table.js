@@ -20,7 +20,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Tag from './tag';
 import { getUserDataFromLocalStorage } from '../utils';
-import API_BASE_URL from '../config';
+import { API_BASE_URL } from '../config';
 
 const columns = [
     { id: 'file_name', label: 'Name', minWidth: 170 },
