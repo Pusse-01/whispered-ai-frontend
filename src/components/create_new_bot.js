@@ -8,6 +8,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { TextField, Typography, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material';
 import { getUserDataFromLocalStorage } from '../utils'
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 import { API_BASE_URL } from '../config';
 
@@ -77,10 +78,10 @@ const CreateBotForm = () => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        if (botData.specialty === null && (promptText.trim() === '' || systemPrompt.trim() === '')) {
-            setIsErrorDialogOpen(true);
-            return;
-        }
+        // if (botData.specialty === null && (promptText.trim() === '' || systemPrompt.trim() === '')) {
+        //     setIsErrorDialogOpen(true);
+        //     return;
+        // }
         const foldersToSend = botData.folders.map((folderItem) => folderItem.name);
 
         // if (foldersToSend.includes('Select All')) {
@@ -97,7 +98,7 @@ const CreateBotForm = () => {
             description: botData.description,
             specialty: specialtyTitles,
             promptText: promptText,
-            systemPrompt: systemPrompt,
+            systemPrompt: promptText,
             folders: foldersToSend,
             logo_image: botData.logo_image,
             user_id: user._id,
@@ -131,7 +132,7 @@ const CreateBotForm = () => {
         } catch (error) {
             console.error('Error creating bot:', error);
             setSnackBarMessage('Bot creation failed!');
-            setLoading(false);
+            // setLoading(false);
         }
 
         setLoading(false);
@@ -223,7 +224,10 @@ const CreateBotForm = () => {
                     />
                     <button
                         className="text-blue-600"
-                        onClick={() => setIsPromptDialogOpen(true)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setIsPromptDialogOpen(true)
+                        }}
                     >
                         Advanced Prompt
                     </button>
@@ -286,29 +290,37 @@ const CreateBotForm = () => {
                     <DialogTitle>Advanced Prompt</DialogTitle>
                     <DialogContent>
                         <p className='text-gray-500'>This is your main control panel. Here you provide detailed instructions that directly guide the behavior and output of your AI bot. </p>
-                        <TextField
-                            label="Prompt"
+                        <TextareaAutosize
+                            aria-label="Prompt"
+                            minRows={3}
                             variant="outlined"
-                            fullWidth
+                            placeholder="Enter your prompt here"
                             value={promptText}
                             onChange={(e) => setPromptText(e.target.value)}
+                            style={{
+                                width: '100%',
+                                resize: 'vertical',
+                                border: '1px solid gray', // Add a gray border
+                                borderRadius: '5px',      // Add border radius for rounded corners
+                                padding: '8px'           // Add padding for spacing inside the textarea
+                            }}
                         />
                         <div className='mt-4'></div>
-                        <p className='text-gray-500'>This is where you set the general 'mood' or 'character' for your AI bot. It's like giving it a personality, but its influence on the bot's responses is gentler.</p>
+                        {/* <p className='text-gray-500'>This is where you set the general 'mood' or 'character' for your AI bot. It's like giving it a personality, but its influence on the bot's responses is gentler.</p>
                         <TextField
                             label="System Prompt"
                             variant="outlined"
                             fullWidth
                             value={systemPrompt}
                             onChange={(e) => setSystemPrompt(e.target.value)}
-                        />
+                        /> */}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setIsPromptDialogOpen(false)}>Cancel</Button>
                         <Button onClick={handlePromptSave} color="primary">Save</Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
+                {/* <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
                     <DialogTitle>Error</DialogTitle>
                     <DialogContent>
                         <Typography variant="body1">Please add Prompt texts here. Make sure to give the clear instructions on the specialty of the bot!</Typography>
@@ -316,7 +328,7 @@ const CreateBotForm = () => {
                     <DialogActions>
                         <Button onClick={() => setIsErrorDialogOpen(false)}>OK</Button>
                     </DialogActions>
-                </Dialog>
+                </Dialog> */}
 
             </form>
             {/* Loading spinner */}

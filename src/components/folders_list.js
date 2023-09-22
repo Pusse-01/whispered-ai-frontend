@@ -26,7 +26,7 @@ function FolderList() {
 
     return (
         <div className="flex flex-wrap">
-            {folders.map(folder => (
+            {[...folders].reverse().map(folder => (
                 <FolderCard key={folder.id} folder={folder} />
             ))}
         </div>

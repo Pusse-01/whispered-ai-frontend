@@ -135,7 +135,7 @@ function FilesTable() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows
+                                {[...rows].reverse()
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row) => {
                                         return (

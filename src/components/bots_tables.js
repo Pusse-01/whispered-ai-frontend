@@ -235,7 +235,7 @@ const BotsTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {botsData.map((item, index) => (
+                            {[...botsData].reverse().map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
                                         {/* Place your icon here */}
