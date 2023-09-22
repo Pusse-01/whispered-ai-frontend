@@ -104,7 +104,7 @@ const AllConversations = ({ onCardClick }) => {
     return (
         <div>
             {/* List of conversation cards */}
-            {conversations.map((conversation) => (
+            {[...conversations].reverse().map((conversation) => (
                 <div key={conversation.id} className="border px-4 py-2 mb-4 rounded-lg w-5/6 cursor-pointer relative" onClick={() => onCardClick(conversation.id)}>
                     <div className="flex flex-col items-start">
                         <p className="text-md font-semibold">{conversation.name}</p>
