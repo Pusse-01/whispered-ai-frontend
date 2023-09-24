@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import BotLogo from '../assets/Bot.png';
 import UserLogo from '../assets/user.png';
 import ReactMarkdown from 'react-markdown'
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import './styling.css'
 
 import { API_BASE_URL } from '../config';
@@ -20,9 +21,14 @@ const ChatSharingWidget = () => {
     const [chatMessages, setChatMessages] = useState([{ user: 'bot', text: 'Hi there! How can I help you?' }]);
     const [message, setMessage] = useState('');
     const { chatID } = useParams();
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     const handleChangeMessage = (e) => {
         setMessage(e.target.value);
+    };
+
+    const toggleChat = () => {
+        setIsChatOpen(!isChatOpen);
     };
 
     const handleKeyPress = (e) => {
@@ -83,68 +89,76 @@ const ChatSharingWidget = () => {
     };
 
     return (
-        <div className="container mx-auto">
-            <div className='bg-[#1d4ed8] rounded-t-xl'
+        <div className={`container mx-auto chat-container ${isChatOpen ? 'open' : ''}`}>
+            {/* Launcher button */}
+            <button className="launcher-button" onClick={toggleChat}>
+                {isChatOpen ? <CancelOutlinedIcon /> : <ControlPointOutlinedIcon />}
+            </button>
+            <div className={`chat-container ${isChatOpen ? 'open' : ''}`}>
+                {/* ... chat interface */}
+                <div className='bg-[#1d4ed8] rounded-t-xl'
 
-            >
-                <p className='p-4 text-left text-white'>Whispered AI</p>
-            </div>
-            <div
-                style={{ height: '90vh' }}
-                className=" flex flex-col pb-4">
-
-                {/* Chat interface */}
-                <div
-                    className="border p-4 mb-4 flex-1 flex-grow overflow-y-auto"
-                    ref={chatContainerRef}
                 >
-                    <div class="flex flex-col">
-                        {/* Chat messages */}
-                        {chatMessages.map((message) => (
-                            <div
-                                key={message.id}
-                                className={'p-2 flex justify-start'}
-                            // ${message.sender === 'user' ? 'justify-end' : '
-                            >
-                                <img
-                                    src={message.user === 'user' ? UserLogo : BotLogo}
-                                    alt="Logo"
-                                    className="w-6 h-6 mr-2"
-                                />
+                    <p className='p-4 text-left text-white'>Whispered AI</p>
+                </div>
+                <div
+                    style={{ height: '70vh' }}
+                    className=" flex flex-col pb-4 border rounded-lg shadow-xl">
+
+                    {/* Chat interface */}
+                    <div
+                        className=" p-4 flex-1 flex-grow overflow-y-auto"
+                        ref={chatContainerRef}
+                    >
+                        <div class="flex flex-col">
+                            {/* Chat messages */}
+                            {chatMessages.map((message) => (
                                 <div
-                                    className={`p-2 justify-start text-left rounded ${message.user === 'user' ? 'bg-white' : 'bg-gray-200'
-                                        }`}
+                                    key={message.id}
+                                    className={'p-2 flex justify-start'}
+                                // ${message.sender === 'user' ? 'justify-end' : '
                                 >
-                                    {message.text === 'typing...' ? (
-                                        <div className="loading text-sm text-gray-500">...</div>
-                                    ) : (
-                                        <ReactMarkdown>{message.text}</ReactMarkdown>
-                                    )}
-                                    {/* <div dangerouslySetInnerHTML={{ __html: message.text }} /> */}
+                                    <img
+                                        src={message.user === 'user' ? UserLogo : BotLogo}
+                                        alt="Logo"
+                                        className="w-6 h-6 mr-2"
+                                    />
+                                    <div
+                                        className={`p-2 justify-start text-left rounded ${message.user === 'user' ? 'bg-white' : 'bg-gray-200'
+                                            }`}
+                                    >
+                                        {message.text === 'typing...' ? (
+                                            <div className="loading text-sm text-gray-500">...</div>
+                                        ) : (
+                                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                                        )}
+                                        {/* <div dangerouslySetInnerHTML={{ __html: message.text }} /> */}
 
+                                    </div>
                                 </div>
-                            </div>
 
-                        ))}
+                            ))}
+                        </div>
+                    </div>
+                    {/* Input field for user message */}
+                    <div className="flex items-center px-2">
+                        <input
+                            type="text"
+                            className="flex-1 mr-2 p-2 border rounded"
+                            placeholder="Type your message..."
+                            value={message}
+                            onChange={handleChangeMessage}
+                            onKeyPress={handleKeyPress}
+                        />
+                        <button
+                            className="bg-[#1d4ed8] text-white p-2 rounded"
+                            onClick={handleSendMessage}
+                        >
+                            Send
+                        </button>
                     </div>
                 </div>
-                {/* Input field for user message */}
-                <div className="flex items-center">
-                    <input
-                        type="text"
-                        className="flex-1 mr-2 p-2 border rounded"
-                        placeholder="Type your message..."
-                        value={message}
-                        onChange={handleChangeMessage}
-                        onKeyPress={handleKeyPress}
-                    />
-                    <button
-                        className="bg-blue-500 text-white p-2 rounded"
-                        onClick={handleSendMessage}
-                    >
-                        Send
-                    </button>
-                </div>
+
             </div>
 
         </div>

@@ -11,3 +11,50 @@
         clip-path: inset(0 -1ch 0 0)
     }
 }
+
+/* CSS for chat popup behavior */
+.container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    transition: right 0.3s ease;
+}
+
+.open {
+    right: 0;
+}
+
+.launcher-button {
+    position: fixed;
+    bottom: 1vh;
+    right: 1vw;
+    background-color: #1d4ed8;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.chat-container {
+    position: fixed;
+    bottom: 4vh;
+    right: -800px;
+    /* Adjust width as needed */
+    width: 400px;
+    height: 80%;
+    border-color: black;
+    background-color: transparent;
+    /* box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1); */
+    transition: right 0.3s ease;
+    z-index: 1;
+}
+
+.chat-container.open {
+    right: 0;
+}
