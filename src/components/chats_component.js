@@ -121,7 +121,7 @@ const Chats = ({ selectedItem, setSelectedItem }) => {
 
 
     return (
-        <div className="container px-4 md:px-8 py-4 ml-20">
+        <div className="px-4 md:px-8 py-4 ml-20">
             <div
                 className="flex justify-between items-center mb-4 flex-wrap"
             >
