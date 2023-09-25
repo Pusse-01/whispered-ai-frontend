@@ -152,7 +152,7 @@ const CreateBotForm = () => {
         <div
             style={{ width: '80vw' }
             }
-            className="container mx-auto py-8" >
+            className="mx-auto py-8" >
             <div className="flex justify-between mb-8">
                 <h2 className="text-2xl font-bold">Create New Bot</h2>
                 <button
