@@ -38,6 +38,7 @@ const BotsTable = () => {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editedBot, setEditedBot] = useState({});
     const [isEditing, setIsEditing] = useState(false);
+    const [anchorEls, setAnchorEls] = useState([]);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -49,7 +50,7 @@ const BotsTable = () => {
             .then((response) => response.json())
             .then((data) => {
                 setBotsData(data);
-
+                setAnchorEls(new Array(data.length).fill(null));
                 console.log(data)
                 setIsLoading(false);
             })
@@ -60,12 +61,25 @@ const BotsTable = () => {
             });
     }, []);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    // const handleClick = (event) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+
+    // const handleClose = () => {
+    //     setAnchorEl(null);
+    // };
+    const handleClick = (event, index) => {
+        // Use the index to set the correct anchorEl
+        const newAnchorEls = [...anchorEls];
+        newAnchorEls[index] = event.currentTarget;
+        setAnchorEls(newAnchorEls);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleClose = (index) => {
+        // Use the index to set the correct anchorEl to null
+        const newAnchorEls = [...anchorEls];
+        newAnchorEls[index] = null;
+        setAnchorEls(newAnchorEls);
     };
 
     const handleNewConversation = async (botId, specialty, documents) => {
@@ -251,13 +265,13 @@ const BotsTable = () => {
                                     </TableCell>
                                     <TableCell>{formatDate(item.saved_time)}</TableCell>
                                     <TableCell>
-                                        <IconButton onClick={handleClick}>
+                                        <IconButton onClick={(event) => handleClick(event, index)}>
                                             <MoreVertIcon />
                                         </IconButton>
                                         <Menu
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleClose}
+                                            anchorEl={anchorEls[index]} // Use the correct anchorEl
+                                            open={Boolean(anchorEls[index])} // Use the correct anchorEl
+                                            onClose={() => handleClose(index)}
                                         >
                                             <MenuItem onClick={() => {
                                                 handleClose();
