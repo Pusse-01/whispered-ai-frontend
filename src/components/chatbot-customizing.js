@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CopyLinkToClipboard from './copy-to-clipboard';
 import { useParams } from 'react-router-dom';
-import { Divider } from '@mui/material';
+import { Divider, Modal, Button, Dialog } from '@mui/material';
 import { FE_URL } from '../config';
 
 function ChatbotCustomizer() {
@@ -32,6 +32,7 @@ function ChatbotCustomizer() {
 
     // State to control the visibility of the chatbot preview popup
     const [isPreviewOpen, setPreviewOpen] = useState(false);
+    const [iframeCode, setIframeCode] = useState('');
 
     // Function to toggle the chatbot preview popup
     const togglePreview = () => {
@@ -71,6 +72,7 @@ function ChatbotCustomizer() {
             launcherBackgroundColor,
             // Add other customization options here...
         };
+        console.log(customizationOptions)
 
         // Generate the iframe code with the customization options
         const iframeCode = `
@@ -111,25 +113,55 @@ function ChatbotCustomizer() {
 
         // Display the iframe code to the user or send it to the server for storage
         console.log(iframeCode);
+        // Set the generated iframe code in the state
+        setIframeCode(iframeCode);
+
+        // Open the popup
+        togglePreview();
     };
 
-    const iframeLink = `<iframe src="${FE_URL}/widget/64fe0cd6ead8f7cafb44bf69" style="border:0px;" name="whisperedai" scrolling="no" frameborder = "1" marginheight = "0" marginwidth = "0" height = "800px" width = "100%" allowfullscreen ></iframe >`
-    const popuplink = ` <script>
-        function initializeChatbot() {
-            var chatbotContainer = document.getElementById("chatbot-container");
-            var chatbotFrame = document.createElement("iframe");
+
+    const iframeLink = `<iframe src="${FE_URL}/widget/${chatID}" style="border:0px;" name="whisperedai" scrolling="no" frameborder = "1" marginheight = "0" marginwidth = "0" height = "800px" width = "100%" allowfullscreen ></iframe >`
+    // const popuplink = ` 
+    // <script>
+    //     function initializeChatbot() {
+    //         var chatbotContainer = document.getElementById("chatbot-container");
+    //         var chatbotFrame = document.createElement("iframe");
+    //         chatbotFrame.style.border = "0";
+    //         chatbotFrame.style.width = "100%";
+    //         chatbotFrame.style.height = "800px";
+    //         chatbotFrame.allowFullscreen = true;
+    //         chatbotFrame.src = "${FE_URL}/widget/${chatID}";
+    //         chatbotContainer.appendChild(chatbotFrame);
+    //     }
+    //     window.addEventListener("load", function () {
+    //         initializeChatbot();
+    //     });
+    // </script>
+    // `
+    const popuplink = `
+    <div id="chatbot-container"></div>
+    <style>
+        #chatbot-container {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            width: 100%;
+            z-index: 1000;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatbotFrame = document.createElement("iframe");
             chatbotFrame.style.border = "0";
             chatbotFrame.style.width = "100%";
-            chatbotFrame.style.height = "800px";
+            chatbotFrame.style.height = "90vh";
             chatbotFrame.allowFullscreen = true;
-            chatbotFrame.src = "${FE_URL}/widget/64fe0cd6ead8f7cafb44bf69";
-            chatbotContainer.appendChild(chatbotFrame);
-        }
-        window.addEventListener("load", function () {
-            initializeChatbot();
+            chatbotFrame.src = "${FE_URL}/widget/${chatID}";
+            document.getElementById("chatbot-container").appendChild(chatbotFrame);
         });
-    </script>`
-
+    </script>
+`;
 
     return (
         <>
@@ -325,7 +357,27 @@ function ChatbotCustomizer() {
                         </button>
                     </div>
 
-
+                    {/* Chatbot Preview Popup */}
+                    <Dialog
+                        open={isPreviewOpen}
+                        onClose={togglePreview}
+                        aria-labelledby="iframe-code-popup"
+                        aria-describedby="generated-iframe-code"
+                    >
+                        <div className="bg-white p-4">
+                            <h2 id="iframe-code-popup">Generated Iframe Code</h2>
+                            {/* <pre id="generated-iframe-code">{iframeCode}</pre> */}
+                            <CopyLinkToClipboard link={iframeCode} />
+                            {/* Optionally, you can add a "Copy Code" button here */}
+                            <Button
+                                onClick={() => {
+                                    // Implement code to copy the iframe code to the clipboard
+                                }}
+                            >
+                                Copy Code
+                            </Button>
+                        </div>
+                    </Dialog>
                     {/* Right Part (Static) */}
                     <div className="relative block h-screen bottom-0 right-0 bg-white w-1/2 p-4 pt-20 ">
                         <div className="w-4/5 h-5/6 bg-white shadow-2xl mx-auto my-auto flex-grow flex flex-col rounded-xl ">

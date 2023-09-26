@@ -103,7 +103,7 @@ const ChatSharingWidget = () => {
                 </div>
                 <div
                     style={{ height: '70vh' }}
-                    className=" flex flex-col pb-4 border rounded-lg shadow-xl">
+                    className=" flex flex-col pb-4 border rounded-lg shadow-xl bg-white">
 
                     {/* Chat interface */}
                     <div
