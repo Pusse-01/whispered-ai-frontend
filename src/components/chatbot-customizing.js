@@ -108,7 +108,7 @@ function ChatbotCustomizer() {
             chatbotFrame.style.width = "100%";
             chatbotFrame.style.height = "90vh";
             chatbotFrame.allowFullscreen = true;
-            chatbotFrame.src = "${FE_URL}/widget/${chatID}?title=${title}&headerLayout=${headerLayout}&headerBackgroundColor=${colorOptions.headerBackgroundColor}&subtitle=${subtitle}&botMessageBackground=${colorOptions.botMessageBackground}&humanMessageBackground=${colorOptions.humanMessageBackground}&composerPlaceholder=${composerPlaceholder}&humanMessageColor=${colorOptions.humanMessageColor}&botMessageColor=${colorOptions.botMessageColor}"
+            chatbotFrame.src = "${FE_URL}/widget/${chatID}?title=${title}&headerLayout=${headerLayout}&headerBackgroundColor=${colorOptions.headerBackgroundColor}&subtitle=${subtitle}&botMessageBackground=${colorOptions.botMessageBackground}&humanMessageBackground=${colorOptions.humanMessageBackground}&composerPlaceholder=${composerPlaceholder}&humanMessageColor=${colorOptions.humanMessageColor}&botMessageColor=${colorOptions.botMessageColor}";
             document.getElementById("chatbot-container").appendChild(chatbotFrame);
         });
     </script>

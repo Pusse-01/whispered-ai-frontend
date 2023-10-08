@@ -24,7 +24,7 @@ const CustomizedChatSharingWidget = () => {
     const { chatID } = useParams();
     // const { title } = useParams();
     const queryString = window.location.search;
-
+    console.log(queryString)
     // Parse the query string to extract the parameters
     const urlParams = new URLSearchParams(queryString);
 
@@ -68,7 +68,7 @@ const CustomizedChatSharingWidget = () => {
                 }
 
                 const data = await response.json();
-                console.log(data)
+                // console.log(data)
                 // const messages = data.messages.map(msg => ({ sender: msg.user, text: msg.text }));
                 // setChatMessages(messages);
                 setChatData(data)
@@ -128,7 +128,7 @@ const CustomizedChatSharingWidget = () => {
             setIsLoadingPage(false);
         }
     };
-    console.log(botMessageColor, humanMessageColor)
+    console.log(botMessageColor, humanMessageColor, headerBackgroundColor)
 
     return (
         <div className={`container mx-auto chat-container ${isChatOpen ? 'open' : ''}`}>
