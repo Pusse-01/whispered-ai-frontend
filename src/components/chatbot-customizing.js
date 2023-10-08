@@ -12,6 +12,8 @@ function ChatbotCustomizer() {
     const [subtitle, setSubtitle] = useState('Your Virtual Assistant');
     const [botMessage, setBotMessage] = useState('Hello, what can I do for you?')
     const [humanMessage, setHumanMessage] = useState('Hello Whispered, This is a preview.')
+    const [botMessageColor, setBotMessageColor] = useState('#1d4ed8')
+    const [humanMessageColor, setHumanMessageColor] = useState('#ffffff')
     const [messageSize, setMessageSize] = useState('medium');
     const [chatBackgroundColor, setChatBackgroundColor] = useState('#fff');
     const [botInitialMessages, setBotInitialMessages] = useState('Hello');
@@ -45,10 +47,12 @@ function ChatbotCustomizer() {
     };
 
     const chatMessageStyle = {
+        color: `${humanMessageColor}`,
         backgroundColor: `${humanMessageBackground}`
     }
 
     const botMessageStyle = {
+        color: `${botMessageColor}`,
         backgroundColor: `${botMessageBackground}`
     }
     console.log(headerBackgroundColor)
@@ -56,62 +60,60 @@ function ChatbotCustomizer() {
     // Function to generate the iframe code
     const generateIframeCode = () => {
         // Create an object to hold all the customization options
-        const customizationOptions = {
-            headerLayout,
-            headerBackgroundColor,
-            title,
-            subtitle,
-            botMessage,
-            botMessageBackground,
-            humanMessage,
-            humanMessageBackground,
-            composerPlaceholder,
-            sendButtonText,
-            launcherSize,
-            screenPosition,
-            launcherBackgroundColor,
-            // Add other customization options here...
+        // const customizationOptions = {
+        //     headerLayout,
+        //     headerBackgroundColor,
+        //     title,
+        //     subtitle,
+        //     botMessage,
+        //     botMessageBackground,
+        //     humanMessage,
+        //     humanMessageBackground,
+        //     composerPlaceholder,
+        //     sendButtonText,
+        //     launcherSize,
+        //     screenPosition,
+        //     launcherBackgroundColor,
+        //     humanMessageColor,
+        //     botMessageColor
+        //     // Add other customization options here...
+        // };
+        // Create an object to store the color options without #
+
+        // console.log(customizationOptions)
+        // Create an object to store the color options without #
+        const colorOptions = {
+            headerBackgroundColor: headerBackgroundColor ? headerBackgroundColor.replace("#", "") : "",
+            botMessageBackground: botMessageBackground ? botMessageBackground.replace("#", "") : "",
+            humanMessageBackground: humanMessageBackground ? humanMessageBackground.replace("#", "") : "",
+            humanMessageColor: humanMessageColor ? humanMessageColor.replace("#", "") : "",
+            botMessageColor: botMessageColor ? botMessageColor.replace("#", "") : "",
         };
-        console.log(customizationOptions)
 
-        // Generate the iframe code with the customization options
         const iframeCode = `
-    <iframe src="https://your-chatbot-url.com"
-      style="border: none; width: 100%; height: 400px;">
-    </iframe>
+    <div id="chatbot-container"></div>
+    <style>
+        #chatbot-container {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            width: 100%;
+            z-index: 1000;
+        }
+    </style>
     <script>
-      const customizationOptions = ${JSON.stringify(customizationOptions)};
-
-      // Access the chatbot container within the iframe
-      const iframe = document.querySelector('iframe');
-      const chatbotContainer = iframe.contentDocument.querySelector('#chatbot-container');
-
-      // Apply customization options to the chatbot
-      chatbotContainer.style.backgroundColor = customizationOptions.headerBackgroundColor;
-      chatbotContainer.querySelector('.chatbot-title').innerText = customizationOptions.title;
-      chatbotContainer.querySelector('.chatbot-subtitle').innerText = customizationOptions.subtitle;
-      chatbotContainer.querySelector('.bot-message').innerText = customizationOptions.botMessage;
-      chatbotContainer.querySelector('.bot-message').style.backgroundColor =
-        customizationOptions.botMessageBackground;
-      chatbotContainer.querySelector('.human-message').innerText = customizationOptions.humanMessage;
-      chatbotContainer.querySelector('.human-message').style.backgroundColor =
-        customizationOptions.humanMessageBackground;
-      chatbotContainer.querySelector('.composer-input').placeholder =
-        customizationOptions.composerPlaceholder;
-      chatbotContainer.querySelector('.send-button').innerText = customizationOptions.sendButtonText;
-      chatbotContainer.querySelector('.launcher').style.width =
-        customizationOptions.launcherSize === 'small' ? '32px' :
-        customizationOptions.launcherSize === 'medium' ? '48px' :
-        customizationOptions.launcherSize === 'large' ? '64px' : '48px';
-      chatbotContainer.querySelector('.launcher').style.backgroundColor =
-        customizationOptions.launcherBackgroundColor;
-
-      // Implement code to apply other customization options here...
-
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatbotFrame = document.createElement("iframe");
+            chatbotFrame.style.border = "0";
+            chatbotFrame.style.width = "100%";
+            chatbotFrame.style.height = "90vh";
+            chatbotFrame.allowFullscreen = true;
+            chatbotFrame.src = "${FE_URL}/widget/${chatID}?title=${title}&headerLayout=${headerLayout}&headerBackgroundColor=${colorOptions.headerBackgroundColor}&subtitle=${subtitle}&botMessageBackground=${colorOptions.botMessageBackground}&humanMessageBackground=${colorOptions.humanMessageBackground}&composerPlaceholder=${composerPlaceholder}&humanMessageColor=${colorOptions.humanMessageColor}&botMessageColor=${colorOptions.botMessageColor}"
+            document.getElementById("chatbot-container").appendChild(chatbotFrame);
+        });
     </script>
-  `;
+`;
 
-        // Display the iframe code to the user or send it to the server for storage
         console.log(iframeCode);
         // Set the generated iframe code in the state
         setIframeCode(iframeCode);
@@ -121,7 +123,7 @@ function ChatbotCustomizer() {
     };
 
 
-    const iframeLink = `<iframe src="${FE_URL}/widget/${chatID}" style="border:0px;" name="whisperedai" scrolling="no" frameborder = "1" marginheight = "0" marginwidth = "0" height = "800px" width = "100%" allowfullscreen ></iframe >`
+    const iframeLink = `<iframe src="${FE_URL}/inline-widget/${chatID}" style="border:0px;" name="whisperedai" scrolling="no" frameborder = "1" marginheight = "0" marginwidth = "0" height = "800px" width = "100%" allowfullscreen ></iframe >`
     // const popuplink = ` 
     // <script>
     //     function initializeChatbot() {
@@ -168,7 +170,7 @@ function ChatbotCustomizer() {
             <div className='text-left ml-20 mt-4 p-4'>
                 <h1 className='text-md font-bold '> Share Link</h1>
                 <p className='text-gray-500'>When this link is enabled, you can have anyone use this bot by visiting this link.</p>
-                <CopyLinkToClipboard link={`${FE_URL}/widget/` + chatID} />
+                <CopyLinkToClipboard link={`${FE_URL}/inline-widget/` + chatID} />
 
             </div>
             <Divider />
@@ -312,17 +314,27 @@ function ChatbotCustomizer() {
                                     onChange={(e) => setBotMessageBackground(e.target.value)}
                                 />
                             </div>
+                            <label className="block text-gray-500 mb-2">Message Text Color</label>
+                            <div className="rounded-2xl flex items-center">
+                                {/* Color Input */}
+                                <p className="text-xs text-gray-500 mr-4 py-auto">{botMessageColor}</p>
+                                <input
+                                    type="color"
+                                    value={botMessageColor}
+                                    onChange={(e) => setBotMessageColor(e.target.value)}
+                                />
+                            </div>
 
 
                             {/* ... Human Message Section*/}
                             <label className="block font-bold mb-2 mt-8">Human</label>
-                            <label className="block text-gray-500 mb-2">Initial Message</label>
+                            {/* <label className="block text-gray-500 mb-2">Initial Message</label>
                             <input
                                 type="text"
                                 value={humanMessage}
                                 onChange={(e) => setHumanMessage(e.target.value)}
                                 className="w-5/6 mb-4 p-2 border border-gray-300 rounded mr-4"
-                            />
+                            /> */}
 
                             <label className="block text-gray-500 mb-2">Message Background Color</label>
                             <div className="rounded-2xl flex items-center">
@@ -332,6 +344,16 @@ function ChatbotCustomizer() {
                                     type="color"
                                     value={humanMessageBackground}
                                     onChange={(e) => setHumanMessageBackground(e.target.value)}
+                                />
+                            </div>
+                            <label className="block text-gray-500 mb-2">Message Text Color</label>
+                            <div className="rounded-2xl flex items-center">
+                                {/* Color Input */}
+                                <p className="text-xs text-gray-500 mr-4 py-auto">{humanMessageColor}</p>
+                                <input
+                                    type="color"
+                                    value={humanMessageColor}
+                                    onChange={(e) => setHumanMessageColor(e.target.value)}
                                 />
                             </div>
 
@@ -350,32 +372,26 @@ function ChatbotCustomizer() {
 
                         {/* Generate Iframe Code */}
                         <button
-                            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            className="mt-4 bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
                             onClick={generateIframeCode}
                         >
-                            Generate Iframe Code
+                            Generate Code
                         </button>
                     </div>
 
                     {/* Chatbot Preview Popup */}
                     <Dialog
+                        fullWidth='True'
+                        maxWidth='xl'
                         open={isPreviewOpen}
                         onClose={togglePreview}
                         aria-labelledby="iframe-code-popup"
                         aria-describedby="generated-iframe-code"
                     >
                         <div className="bg-white p-4">
-                            <h2 id="iframe-code-popup">Generated Iframe Code</h2>
-                            {/* <pre id="generated-iframe-code">{iframeCode}</pre> */}
+                            <h2 id="iframe-code-popup">Generated Code</h2>
+
                             <CopyLinkToClipboard link={iframeCode} />
-                            {/* Optionally, you can add a "Copy Code" button here */}
-                            <Button
-                                onClick={() => {
-                                    // Implement code to copy the iframe code to the clipboard
-                                }}
-                            >
-                                Copy Code
-                            </Button>
                         </div>
                     </Dialog>
                     {/* Right Part (Static) */}
@@ -387,7 +403,7 @@ function ChatbotCustomizer() {
                             </div>
                             <div className="flex justify-start px-2">
                                 <div
-                                    className={`py-2 px-4 rounded-2xl m-2 text-left text-gray-700`}
+                                    className={`text-${botMessageColor} py-2 px-4 rounded-2xl m-2 text-left `}
                                     style={botMessageStyle}
                                 >
                                     {botMessage}
@@ -395,7 +411,7 @@ function ChatbotCustomizer() {
                             </div>
                             <div className="flex justify-end px-2">
                                 <div
-                                    className={`text-white py-2 px-4 rounded-2xl m-2 text-left`}
+                                    className={`text-[${humanMessageColor}] py-2 px-4 rounded-2xl m-2 text-left`}
                                     style={chatMessageStyle}
                                 >
                                     {humanMessage}

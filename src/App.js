@@ -14,6 +14,7 @@ import Folders from './screens/folders';
 import Profile from './screens/profile';
 import ChatSharingWidget from './components/chat-sharing-widget';
 import ChatbotCustomizer from './components/chatbot-customizing';
+import CustomizedChatSharingWidget from './components/chatbot-customized-widget';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,7 +59,9 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/widget/:chatID" element={<ChatSharingWidget />} />
+          <Route path="/inline-widget/:chatID" element={<ChatSharingWidget />} />
+          <Route path="/widget/:chatID" element={<CustomizedChatSharingWidget />} />
+
         </Routes>
 
         {isLoggedIn ? (

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function CopyLinkToClipboard({ link }) {
     const [isCopied, setIsCopied] = useState(false);
     const linkToCopy = link
 
     const copyToClipboard = () => {
+        console.log(linkToCopy)
         const textField = document.createElement('textarea');
         textField.innerText = linkToCopy;
         document.body.appendChild(textField);
@@ -13,6 +14,21 @@ function CopyLinkToClipboard({ link }) {
         textField.remove();
         setIsCopied(true);
     };
+
+
+
+    useEffect(() => {
+        if (isCopied) {
+            // After copying, reset the "Copied!" state after a brief delay
+            const resetTimeout = setTimeout(() => {
+                setIsCopied(false);
+            }, 2000);
+
+            return () => {
+                clearTimeout(resetTimeout);
+            };
+        }
+    }, [isCopied]);
 
     return (
         <div className="py-4 rounded-md">

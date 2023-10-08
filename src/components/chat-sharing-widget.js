@@ -89,12 +89,12 @@ const ChatSharingWidget = () => {
     };
 
     return (
-        <div className={`container mx-auto chat-container ${isChatOpen ? 'open' : ''}`}>
+        <div className={`container mx-auto`}>
             {/* Launcher button */}
-            <button className="launcher-button" onClick={toggleChat}>
+            {/* <button className="launcher-button" onClick={toggleChat}>
                 {isChatOpen ? <CancelOutlinedIcon /> : <ControlPointOutlinedIcon />}
-            </button>
-            <div className={`chat-container ${isChatOpen ? 'open' : ''}`}>
+            </button> */}
+            <div className={``}>
                 {/* ... chat interface */}
                 <div className='bg-[#1d4ed8] rounded-t-xl'
 
@@ -102,8 +102,8 @@ const ChatSharingWidget = () => {
                     <p className='p-4 text-left text-white'>Whispered AI</p>
                 </div>
                 <div
-                    style={{ height: '70vh' }}
-                    className=" flex flex-col pb-4 border rounded-lg shadow-xl bg-white">
+                    style={{ height: '85vh' }}
+                    className="flex flex-col border rounded-lg shadow-xl bg-white">
 
                     {/* Chat interface */}
                     <div

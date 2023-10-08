@@ -47,10 +47,14 @@ const NewConversations = () => {
                 },
                 body: JSON.stringify({
                     query: msg,
-                    user_id: '',
+                    user_id: chatData.userID,
                     conversation_id: chatID,
-                    files: chatData.documents, // Add files if needed
-                    tags: chatData.tags, // Add tags if needed
+                    files: chatData.documents,
+                    tags: chatData.tags,
+                    specialty: chatData.specialty,
+                    customPromptText: chatData.promptText,
+                    customSystemPrompt: chatData.systemPrompt,
+                    msgs: chatData.messages
                 }),
             });
 
@@ -92,7 +96,7 @@ const NewConversations = () => {
                 }
 
                 const data = await response.json();
-
+                console.log(data)
                 const messages = data.messages.map(msg => ({ sender: msg.user, text: msg.text }));
                 setChatMessages(messages);
                 setChatData(data)
