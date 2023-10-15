@@ -28,16 +28,27 @@ const CustomizedChatSharingWidget = () => {
     // Parse the query string to extract the parameters
     const urlParams = new URLSearchParams(queryString);
 
-    // Get the 'title' parameter value
-    const title = urlParams.get('title');
-    const headerLayout = urlParams.get('headerLayout')
-    const headerBackgroundColor = urlParams.get('headerBackgroundColor')
-    const subtitle = urlParams.get('subtitle')
-    const botMessageBackground = urlParams.get('botMessageBackground')
-    const humanMessageBackground = urlParams.get('humanMessageBackground')
-    const composerPlaceholder = urlParams.get('composerPlaceholder')
-    const humanMessageColor = urlParams.get('humanMessageColor')
-    const botMessageColor = urlParams.get('botMessageColor')
+    // const title = urlParams.get('title');
+    // const headerLayout = urlParams.get('headerLayout')
+    // const headerBackgroundColor = urlParams.get('headerBackgroundColor')
+    // const subtitle = urlParams.get('subtitle')
+    // const botMessageBackground = urlParams.get('botMessageBackground')
+    // const humanMessageBackground = urlParams.get('humanMessageBackground')
+    // const composerPlaceholder = urlParams.get('composerPlaceholder')
+    // const humanMessageColor = urlParams.get('humanMessageColor')
+    // const botMessageColor = urlParams.get('botMessageColor')
+
+    const [customStyling, setCustomStyling] = useState({
+        title: 'Whispered AI',
+        subtitle: '',
+        headerLayout: 'left',
+        headerBackgroundColor: '1d4ed8',
+        botMessageBackground: 'c0c0c0',
+        humanMessageBackground: '1d4ed8',
+        composerPlaceholder: 'Type your message...',
+        humanMessageColor: 'ffffff',
+        botMessageColor: '000000',
+    });
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -56,6 +67,17 @@ const CustomizedChatSharingWidget = () => {
             handleSendMessage();
         }
     };
+
+    useEffect(() => {
+        // Listen for postMessage from the parent window
+        window.addEventListener("message", (event) => {
+            const { customStyling } = event.data;
+            if (customStyling) {
+                setCustomStyling(customStyling);
+            }
+        });
+    }, []);
+
     useEffect(() => {
         chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         const fetchPreviousMessages = async () => {
@@ -128,7 +150,7 @@ const CustomizedChatSharingWidget = () => {
             setIsLoadingPage(false);
         }
     };
-    console.log(botMessageColor, humanMessageColor, headerBackgroundColor)
+    // console.log(botMessageColor, humanMessageColor, headerBackgroundColor)
 
     return (
         <div className={`container mx-auto chat-container ${isChatOpen ? 'open' : ''}`}>
@@ -138,11 +160,13 @@ const CustomizedChatSharingWidget = () => {
             </button>
             <div className={`chat-container ${isChatOpen ? 'open' : ''}`}>
                 {/* ... chat interface */}
-                <div className={`bg-[#${headerBackgroundColor || '1d4ed8'}] rounded-t-xl p-2`}
-
+                <div className={`rounded-t-xl p-2`}
+                    style={{
+                        backgroundColor: `#${customStyling.headerBackgroundColor || '1d4ed8'}`
+                    }}
                 >
-                    <p className={`px-2 text-left text-white  text-${headerLayout || 'left'} text-lg`}>{title ? title : 'Whispered AI'}</p>
-                    <p className={`px-2 text-left text-white  text-${headerLayout || 'left'} text-sm`}>{subtitle ? subtitle : ''}</p>
+                    <p className={`px-2 text-left text-white  text-${customStyling.headerLayout || 'left'} text-lg`}>{customStyling.title ? customStyling.title : 'Whispered AI'}</p>
+                    <p className={`px-2 text-left text-white  text-${customStyling.headerLayout || 'left'} text-sm`}>{customStyling.subtitle ? customStyling.subtitle : ''}</p>
                 </div>
                 <div
                     style={{ height: '70vh' }}
@@ -172,7 +196,7 @@ const CustomizedChatSharingWidget = () => {
                                             <div
 
                                                 style={{
-                                                    backgroundColor: `#${humanMessageBackground || '1d4ed8'}`, color: `#${humanMessageColor || 'ffffff'}`
+                                                    backgroundColor: `#${customStyling.humanMessageBackground || '1d4ed8'}`, color: `#${customStyling.humanMessageColor || 'ffffff'}`
                                                 }}
                                                 className={`p-2 justify-start text-left rounded `}
                                             >
@@ -186,7 +210,7 @@ const CustomizedChatSharingWidget = () => {
                                         </> :
                                         <>
                                             <div
-                                                style={{ backgroundColor: `#${botMessageBackground || 'c0c0c0'}`, color: `#${botMessageColor || '000000'}` }}
+                                                style={{ backgroundColor: `#${customStyling.botMessageBackground || 'c0c0c0'}`, color: `#${customStyling.botMessageColor || '000000'}` }}
                                                 className={`p-2 justify-start text-left rounded`}
                                             >
                                                 {message.text === 'typing...' ? (
@@ -212,7 +236,7 @@ const CustomizedChatSharingWidget = () => {
                         <input
                             type="text"
                             className="flex-1 mr-2 p-2 border rounded"
-                            placeholder={composerPlaceholder ? composerPlaceholder : 'Type your message...'}
+                            placeholder={customStyling.composerPlaceholder ? customStyling.composerPlaceholder : 'Type your message...'}
                             value={message}
                             onChange={handleChangeMessage}
                             onKeyPress={handleKeyPress}
