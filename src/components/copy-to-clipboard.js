@@ -3,20 +3,17 @@ import React, { useState, useEffect } from 'react';
 function CopyLinkToClipboard({ link }) {
     const [isCopied, setIsCopied] = useState(false);
     const linkToCopy = link
-
     const copyToClipboard = () => {
+        navigator.clipboard.writeText(linkToCopy)
         console.log(linkToCopy)
-        const textField = document.createElement('textarea');
-        textField.innerText = linkToCopy;
-        document.body.appendChild(textField);
-        textField.select();
-        document.execCommand('copy');
-        textField.remove();
+        // const textField = document.createElement('textarea');
+        // textField.innerText = linkToCopy;
+        // document.body.appendChild(textField);
+        // textField.select();
+        // document.execCommand('copy');
+        // textField.remove();
         setIsCopied(true);
     };
-
-
-
     useEffect(() => {
         if (isCopied) {
             // After copying, reset the "Copied!" state after a brief delay
@@ -29,7 +26,6 @@ function CopyLinkToClipboard({ link }) {
             };
         }
     }, [isCopied]);
-
     return (
         <div className="py-4 rounded-md">
             {/* <p className="text-gray-700 mb-2">Click the button to copy the link:</p> */}
@@ -50,5 +46,4 @@ function CopyLinkToClipboard({ link }) {
         </div>
     );
 }
-
 export default CopyLinkToClipboard;

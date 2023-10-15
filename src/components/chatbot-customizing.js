@@ -35,6 +35,8 @@ function ChatbotCustomizer() {
     // State to control the visibility of the chatbot preview popup
     const [isPreviewOpen, setPreviewOpen] = useState(false);
     const [iframeCode, setIframeCode] = useState('');
+    const [iframeInlineCode, setIframeInlineCode] = useState('');
+
 
     // Function to toggle the chatbot preview popup
     const togglePreview = () => {
@@ -108,13 +110,78 @@ function ChatbotCustomizer() {
             chatbotFrame.style.width = "100%";
             chatbotFrame.style.height = "90vh";
             chatbotFrame.allowFullscreen = true;
-            chatbotFrame.src = "${FE_URL}/widget/${chatID}?title=${title}&headerLayout=${headerLayout}&headerBackgroundColor=${colorOptions.headerBackgroundColor}&subtitle=${subtitle}&botMessageBackground=${colorOptions.botMessageBackground}&humanMessageBackground=${colorOptions.humanMessageBackground}&composerPlaceholder=${composerPlaceholder}&humanMessageColor=${colorOptions.humanMessageColor}&botMessageColor=${colorOptions.botMessageColor}";
+            const customStyling = {
+                title: '${title}',
+                headerLayout: '${headerLayout}',
+                headerBackgroundColor: '${colorOptions.headerBackgroundColor}',
+                subtitle: '${subtitle}',
+                botMessageBackground:'${colorOptions.botMessageBackground}',
+                humanMessageBackground: '${colorOptions.humanMessageBackground}',
+                composerPlaceholder: '${composerPlaceholder}',
+                humanMessageColor: '${colorOptions.humanMessageColor}',
+                botMessageColor: '${colorOptions.botMessageColor}',
+            };
+            
+            chatbotFrame.src = "${FE_URL}/widget/${chatID}";
+            chatbotFrame.addEventListener("load", function () {
+        
+
+            setTimeout(() => {
+                    chatbotFrame.contentWindow.postMessage({ customStyling }, "*");
+                }, [100]);
+            });
+
             document.getElementById("chatbot-container").appendChild(chatbotFrame);
         });
     </script>
 `;
 
-        console.log(iframeCode);
+        const iframeInlineCode = `
+    <div id="chatbot-container"></div>
+    <style>
+        #chatbot-container {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            width: 100%;
+            z-index: 1000;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatbotFrame = document.createElement("iframe");
+            chatbotFrame.style.border = "0";
+            chatbotFrame.style.width = "100%";
+            chatbotFrame.style.height = "90vh";
+            chatbotFrame.allowFullscreen = true;
+            const customStyling = {
+                title: '${title}',
+                headerLayout: '${headerLayout}',
+                headerBackgroundColor: '${colorOptions.headerBackgroundColor}',
+                subtitle: '${subtitle}',
+                botMessageBackground:'${colorOptions.botMessageBackground}',
+                humanMessageBackground: '${colorOptions.humanMessageBackground}',
+                composerPlaceholder: '${composerPlaceholder}',
+                humanMessageColor: '${colorOptions.humanMessageColor}',
+                botMessageColor: '${colorOptions.botMessageColor}',
+            };
+            
+            chatbotFrame.src = "${FE_URL}/inline-widget/${chatID}";
+            chatbotFrame.addEventListener("load", function () {
+        
+
+            setTimeout(() => {
+                    chatbotFrame.contentWindow.postMessage({ customStyling }, "*");
+                }, [100]);
+            });
+
+            document.getElementById("chatbot-container").appendChild(chatbotFrame);
+        });
+    </script>
+`;
+        setIframeInlineCode(iframeInlineCode)
+
+
         // Set the generated iframe code in the state
         setIframeCode(iframeCode);
 
@@ -389,9 +456,42 @@ function ChatbotCustomizer() {
                         aria-describedby="generated-iframe-code"
                     >
                         <div className="bg-white p-4">
-                            <h2 id="iframe-code-popup">Generated Code</h2>
+                            {/* <h2 id="iframe-code-popup">Generated Code</h2> */}
 
-                            <CopyLinkToClipboard link={iframeCode} />
+                            <div className='text-left p-4'>
+                                <h1 className='text-md font-bold '> Embed</h1>
+                                <div className="flex rounded-lg p-1 bg-gray-200 ">
+
+                                    <button
+                                        className={`${embedOption === 'inline' ? 'bg-white text-black' : ' text-black'
+                                            } w-1/2 py-2 px-4 rounded-md flex justify-center`}
+
+                                        onClick={() => setEmbedOption('inline')}
+                                    >
+                                        {/* <img src={profImg} alt="Professor" className="icon px-2" /> */}
+                                        Inline Embed
+                                    </button>
+
+                                    <button
+                                        className={`${embedOption === 'popup' ? 'bg-white text-black' : ' text-black'
+                                            } w-1/2 py-2 px-4 rounded-md flex justify-center`}
+                                        onClick={() => setEmbedOption('popup')}
+                                    >
+                                        {/* Add an icon here */}
+                                        {/* <img src={studentImg} alt="Student" className="icon px-2" /> */}
+                                        Pop-Up Embed
+                                    </button>
+                                </div>
+                                {(embedOption === 'inline') ? (<>
+                                    <p className='text-gray-500'>To get the widget to appear on your webpage simply copy and paste the snippet below somewhere in the body tag. </p>
+                                    <CopyLinkToClipboard link={iframeInlineCode} />
+                                </>) :
+                                    (<>
+                                        <p className='text-gray-500'>To get the widget to appear on your web app simply copy and paste the snippet below before the closing `head` tag on every page where you want the widget to appear for website visitors.</p>
+                                        <CopyLinkToClipboard link={iframeCode} />
+                                    </>)}
+
+                            </div >
                         </div>
                     </Dialog>
                     {/* Right Part (Static) */}
